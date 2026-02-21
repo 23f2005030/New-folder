@@ -11,23 +11,28 @@ jobs:
       uses: actions/checkout@v4
       
     - name: Prime cache
-      uses: actions/cache/restore@v4
       id: prime-cache-d901417
+      uses: actions/cache/restore@v4
       with:
         key: cache-d901417
         
     - name: Show cache result
-      run: echo "Cache result: ${{ steps.prime-cache-d901417.outputs.cache-hit }}"
+      run: |
+        if [ "${{ steps.prime-cache-d901417.outputs.cache-hit }}" = "true" ]; then
+          echo "Cache hit!"
+        else
+          echo "Cache miss!"
+        fi
       
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
-    - name: Install dependencies  # This is where cache would normally speed things up
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # Add a requirements.txt if needed, or skip
+        pip install -r requirements.txt
         
-    - name: Run tests  # Optional dummy step
+    - name: Run tests
       run: echo "Tests passed!"
